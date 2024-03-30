@@ -27,7 +27,8 @@ def cytus_finds(source_dir, end_swith, flag):
         found_files = []
         for parent, _, filenames in os.walk(source_dir, topdown=True):
             for filename in filenames:
-                if len(os.path.join(parent, filename).split(os.path.sep)) == len(source_dir.split(os.path.sep)) + 1 and filename.endswith(end_swith):
+                if len(os.path.join(parent, filename).split(os.path.sep)) == len(
+                        source_dir.split(os.path.sep)) + 1 and filename.endswith(end_swith):
                     found_files.append(os.path.join(parent, filename))
             return sorted(found_files)
     if flag == 4:
@@ -196,9 +197,6 @@ def dattoimg(partition):
     os.remove(PROJECT + os.sep + partition + '.patch.dat')
 
 
-
-
-
 def FindArgs(source_dir, file_name):
     find = []
     for parent, _, filenames in os.walk(source_dir):
@@ -270,7 +268,7 @@ def RunModules(sub):
     Shell_Sub = sub + os.sep + 'run.sh'
     if os.path.isfile(Shell_Sub):
         subprocess.run(BINS_DIR + '/busybox sh ' + Shell_Sub + ' ' + PROJECT)
-    time.sleep(2)
+    input()
 
 
 def md5zip(zipfile):
