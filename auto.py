@@ -41,7 +41,7 @@ def cytus_finds(source_dir, end_swith, flag):
         return sorted(found_files)
     elif flag == 5:
         with open(source_dir, 'r') as f:
-            return sorted([l.split(' ')[0] for l in f])
+            return sorted([l.split()[0] for l in f])
 
 
 def Zarchiver(source, distance, passwd, flag):
@@ -96,7 +96,7 @@ def auto():
         with open(PROJECT + '/000_HNA/romname.txt', 'a') as g:
             g.write(device + '_' + version)
             break
-    for SUBS in cytus_loadglobaldict(STEP_TXT, 'RUN_MODULES').split(' '):
+    for SUBS in cytus_loadglobaldict(STEP_TXT, 'RUN_MODULES').split():
         RunModules(PLUGIN + os.sep + SUBS)
     with open(PROJECT + '/000_HNA/partition.txt') as h:
         for partitionname in h:
@@ -264,11 +264,10 @@ def menu2():
     if CHOOSE == '22':
         PROJECT = LOCAL_DIR + '/HNA_project'
         images = cytus_loadglobaldict(STEP_TXT, 'UNPACK_EXTRA_IMAGES')
-        for image in images.split(' '):
-            imagename = os.path.splitext(image)[0]
+        for image in images.split():
             if os.path.exists(PROJECT + os.sep + image):
                 display('\x1b[0;32m Unpack ' + image + '\x1b[0m')
-                cytus_kernel_img(PROJECT + os.sep + image, PROJECT + os.sep + imagename, 1)
+                cytus_kernel_img(PROJECT + os.sep + image, PROJECT + os.sep + os.path.splitext(image)[0], 1)
                 break
         time.sleep(5)
     if CHOOSE == 'Q':
