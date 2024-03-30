@@ -276,6 +276,7 @@ def menu2():
 
 
 if __name__ == '__main__':
+    # What the Fuck!!!!
     os.chdir(LOCAL_DIR)
     files = glob.glob('*.zip')
     if files:
