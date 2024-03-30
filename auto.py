@@ -7,7 +7,7 @@ import subprocess
 import sys
 import time
 import zipfile
-
+import fspatch
 import img2sdat
 import imgextractor
 import sdat2img
@@ -156,14 +156,12 @@ def cytus_kernel_img(source, distance, flag=1, orz=' '):
 def make_ext4fs(partition):
     distance = PROJECT + os.sep + partition + '.img'
     source = PROJECT + os.sep + partition
-    newdatOut = os.path.dirname(distance)
-    ver = 4
     fsconfig = PROJECT + os.sep + '000_HNA' + os.sep + partition + '_fs_config'
     context = PROJECT + os.sep + '000_HNA' + os.sep + partition + '_file_contexts'
     size = PROJECT + os.sep + '000_HNA' + os.sep + partition + '_size.txt'
     with open(size, 'r') as sz:
-        fsize = sz.readline().strip('\n')
-    walk_add_fsconfig(source, fsconfig)
+        fsize = sz.readline().strip()
+    fspatch.main(source, fsconfig)
     if os.path.isfile(distance):
         display('\x1b[0;31m Compressed ' + partition + '.img \x1b[0m')
         os.remove(distance)
@@ -172,7 +170,7 @@ def make_ext4fs(partition):
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL)
         display('\x1b[0;32m Convert ' + partition + '.img to ' + partition + '.new.dat \x1b[0m')
-        img2sdat.main(distance, newdatOut, ver, partition)
+        img2sdat.main(distance, os.path.dirname(distance), 4, partition)
 
 
 def brotlilinux(partition, flag):
@@ -198,24 +196,7 @@ def dattoimg(partition):
     os.remove(PROJECT + os.sep + partition + '.patch.dat')
 
 
-def walk_add_fsconfig(source, fsconfig):
-    target_dir_lists = cytus_finds(source, ' ', 4)
-    fs_configs_lists = cytus_finds(fsconfig, ' ', 5)
-    for line in target_dir_lists:
-        line2 = line.replace(PROJECT + os.sep, '').replace(os.sep, '/')
-        if line2 not in fs_configs_lists:
-            if os.path.isdir(line):
-                target_addon = line2 + ' 0 0 0755'
-            elif os.path.isfile(line):
-                if 'system/xbin' in line2 or 'system/bin' in line2 or 'vendor/bin' in line2 or (
-                        'vendor/bin' in line2) or ('sbin' in line2):
-                    target_addon = line2 + ' 0 0 0755'
-                else:
-                    target_addon = line2 + ' 0 0 0644'
-            else:
-                target_addon = line2 + ' 0 0 0644'
-            with open(fsconfig, 'a') as new_fs_configs:
-                new_fs_configs.write(str(target_addon + '\n'))
+
 
 
 def FindArgs(source_dir, file_name):
