@@ -175,7 +175,6 @@ def make_ext4fs(partition):
 
 
 def brotlilinux(partition, flag):
-    brotlicf = cytus_loadglobaldict(STEP_TXT, 'REPACK_BROTLI_LEVEL')
     if flag == 1:
         display('\x1b[0;32m Convert ' + partition + '.new.dat.br to ' + partition + '.new.dat \x1b[0m')
         subprocess.run(BINS_DIR + f"/brotli -dfj {PROJECT + os.sep + partition + '.new.dat.br'}",
@@ -183,7 +182,7 @@ def brotlilinux(partition, flag):
     if flag == 2:
         display('\x1b[0;32m Convert ' + partition + '.new.dat to ' + partition + '.new.dat.br \x1b[0m')
         subprocess.run(
-            f"{BINS_DIR}/brotli -{brotlicf}jfo {PROJECT + os.sep + partition + '.new.dat.br'} {PROJECT + os.sep + partition + '.new.dat'}",
+            f"{BINS_DIR}/brotli -{cytus_loadglobaldict(STEP_TXT, 'REPACK_BROTLI_LEVEL')}jfo {PROJECT + os.sep + partition + '.new.dat.br'} {PROJECT + os.sep + partition + '.new.dat'}",
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
@@ -203,7 +202,7 @@ def FindArgs(source_dir, file_name):
         for filename in filenames:
             if file_name == filename:
                 find.append(os.path.join(parent, filename))
-        return find
+    return find
 
 
 def cytus_loadglobaldict(filename, valuename):
@@ -246,7 +245,7 @@ def RunModules(sub):
     Shell_Sub = sub + os.sep + 'run.sh'
     if os.path.isfile(Shell_Sub):
         subprocess.run(BINS_DIR + '/busybox sh ' + Shell_Sub + ' ' + PROJECT)
-    input()
+    input("Enter to return")
 
 
 def md5zip(zipfile):
@@ -263,8 +262,7 @@ def menu2():
     CHOOSE = input('> Select: ')
     if CHOOSE == '22':
         PROJECT = LOCAL_DIR + '/HNA_project'
-        images = cytus_loadglobaldict(STEP_TXT, 'UNPACK_EXTRA_IMAGES')
-        for image in images.split():
+        for image in cytus_loadglobaldict(STEP_TXT, 'UNPACK_EXTRA_IMAGES'):
             if os.path.exists(PROJECT + os.sep + image):
                 display('\x1b[0;32m Unpack ' + image + '\x1b[0m')
                 cytus_kernel_img(PROJECT + os.sep + image, PROJECT + os.sep + os.path.splitext(image)[0], 1)
