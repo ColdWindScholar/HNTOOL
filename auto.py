@@ -25,12 +25,9 @@ def display(message):
 def cytus_finds(source_dir, end_swith, flag):
     if flag == 1:
         found_files = []
-        parent_depth = len(source_dir.split(os.path.sep))
         for parent, _, filenames in os.walk(source_dir, topdown=True):
             for filename in filenames:
-                dirname_path = os.path.join(parent, filename)
-                dirname_depth = len(dirname_path.split(os.path.sep))
-                if dirname_depth == parent_depth + 1 and filename.endswith(end_swith):
+                if len(os.path.join(parent, filename).split(os.path.sep)) == len(source_dir.split(os.path.sep)) + 1 and filename.endswith(end_swith):
                     found_files.append(os.path.join(parent, filename))
             return sorted(found_files)
     if flag == 4:
@@ -135,10 +132,7 @@ def cytus_kernel_img(source, distance, flag=1, orz=' '):
             os.remove(str(distance) + os.sep + 'authors.txt')
             shutil.rmtree(str(distance) + os.sep + 'android_win_tools')
     elif flag == 2 and (not os.path.isfile(distance)):
-        if orz == ' --origsize ':
-            siorz = 'original size'
-        else:
-            siorz = 'minimum size'
+        siorz = 'original size' if orz == ' --origsize ' else 'minimum size'
         Zarchiver(aik, source, 0, 1)
         sTime = time.time()
         display('\x1b[1;32m Repack: {} <{}> ...\x1b[0m'.format(os.path.basename(distance), siorz))
@@ -290,7 +284,7 @@ def menu():
 
 
 def RunModules(sub):
-    os.system('cls' if os.name == 'nt' else 'cls')
+    os.system('cls')
     print('\x1b[1;31m> Plugin running:\x1b[0m ' + os.path.basename(sub) + '\n')
     Shell_Sub = sub + os.sep + 'run.sh'
     if os.path.isfile(Shell_Sub):
