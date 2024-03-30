@@ -4,9 +4,9 @@ import os
 import platform
 import shutil
 import subprocess
-import sys
 import time
 import zipfile
+
 import fspatch
 import img2sdat
 import imgextractor
@@ -219,41 +219,19 @@ def cytus_loadglobaldict(filename, valuename):
     return d
 
 
-def clearall(source):
-    for filename in os.listdir(source):
-        file_path = os.path.join(source, filename)
-        try:
-            if os.path.isfile(file_path) or os.path.islink(file_path):
-                os.unlink(file_path)
-            elif os.path.isdir(file_path):
-                shutil.rmtree(file_path)
-        except Exception as e:
-            print('Failed to delete %s. Reason: %s' % (file_path, e))
-
-
-def print_one_by_one(text):
-    sys.stdout.write('\r                                                             \r')
-    sys.stdout.flush()
-    for c in text:
-        sys.stdout.write(c)
-        sys.stdout.flush()
-        time.sleep(0.02)
-
-
 def menu():
     os.system('cls')
-    OS_VERSION = platform.system() + ' ' + platform.release()
-    print('\x1b[0;32m\n  PLATFORM : \x1b[0;31m' + OS_VERSION + ' \x1b[0m')
+    print(f'\x1b[0;32m\n  PLATFORM : \x1b[0;31m {platform.system()} {platform.release()} \x1b[0m')
     print('\x1b[0;32m  FIRMWARE : \x1b[0;35m' + file + ' \x1b[0m\n')
     print('\x1b[0;37m  --------------------------------------------------\x1b[0m')
     print('\x1b[0;35m  [1] - Auto       [2] - Manual       [Q] - Exit  \x1b[0m\n')
     CHOOSE = input('> Select: ')
-    if CHOOSE.lower() == '1':
+    if CHOOSE == '1':
         if file == 'None':
             menu()
         else:
             auto()
-    if CHOOSE.lower() == '2':
+    if CHOOSE == '2':
         os.system('cls')
         menu2()
     if CHOOSE == 'Q':
